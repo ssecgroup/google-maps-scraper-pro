@@ -48,7 +48,66 @@ load_dotenv()
 init(autoreset=True)
 
 # ============================================================================
-# CHECKPOINT MANAGER ❤ https://github/ssecgroup
+# SIMPLE RATE LIMITER - Human-like delays, no aggressive patterns
+# ============================================================================
+
+class RateLimiter:
+    """
+    Simple, responsible rate limiter that mimics human behavior
+    Prevents aggressive scanning and IP blocks
+    """
+    
+    def __init__(self, min_delay=2, max_delay=5, jitter=True):
+        self.min_delay = min_delay
+        self.max_delay = max_delay
+        self.jitter = jitter
+        self.last_request = 0
+        self.consecutive_requests = 0
+        self.logger = logging.getLogger(__name__)
+    
+    def wait(self):
+        """Wait appropriate time between requests"""
+        now = time.time()
+        
+        # Calculate base delay (increases with consecutive requests)
+        if self.consecutive_requests > 5:
+            # After 5 quick requests, add extra delay
+            base_delay = random.uniform(self.min_delay * 1.5, self.max_delay * 1.5)
+        elif self.consecutive_requests > 10:
+            # After 10 quick requests, add more delay
+            base_delay = random.uniform(self.min_delay * 2, self.max_delay * 2)
+        else:
+            base_delay = random.uniform(self.min_delay, self.max_delay)
+        
+        # Add jitter if enabled
+        if self.jitter:
+            delay = base_delay * random.uniform(0.8, 1.2)
+        else:
+            delay = base_delay
+        
+        # Ensure we don't request too fast
+        time_since_last = now - self.last_request
+        if time_since_last < delay:
+            sleep_time = delay - time_since_last
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+        
+        self.last_request = time.time()
+        self.consecutive_requests += 1
+    
+    def reset(self):
+        """Reset consecutive counter (call after longer breaks)"""
+        self.consecutive_requests = 0
+    
+    def long_break(self):
+        """Take a longer break (simulates human pause)"""
+        break_time = random.uniform(10, 30)
+        self.logger.info(f"Taking a {break_time:.1f} second break...")
+        time.sleep(break_time)
+        self.reset()
+
+# ============================================================================
+# CHECKPOINT MANAGER
 # ============================================================================
 
 class CheckpointManager:
@@ -351,6 +410,9 @@ class GoogleMapsScraperPro:
         self.interrupt_count = 0
         self.setup_signal_handlers()
         
+        # Initialize rate limiter
+        self.rate_limiter = RateLimiter(min_delay=2, max_delay=5, jitter=True)
+        
     def load_config(self):
         """Load configuration"""
         try:
@@ -361,7 +423,7 @@ class GoogleMapsScraperPro:
             self.config = {
                 "advanced_settings": {
                     "headless": False,
-                    "rate_limiting": {"smart_delay": {"min_delay": 1, "max_delay": 2}}
+                    "rate_limiting": {"enabled": True}
                 }
             }
     
@@ -522,6 +584,13 @@ class GoogleMapsScraperPro:
                     self.logger.info("Skipping current item due to interrupt")
                     continue
                 
+                # Apply rate limiting - human-like delays
+                self.rate_limiter.wait()
+                
+                # Every 20 businesses, take a longer break
+                if len(self.businesses) > 0 and len(self.businesses) % 20 == 0:
+                    self.rate_limiter.long_break()
+                
                 # Get current cards (refresh to avoid stale)
                 try:
                     current_cards = browser.get_business_cards()
@@ -653,6 +722,9 @@ class GoogleMapsScraperPro:
                                         len(self.businesses)
                                     )
                                     print(f"{Fore.CYAN} Progress: {len(self.businesses)} businesses scraped")
+                                    
+                                    # Reset rate limiter after checkpoint
+                                    self.rate_limiter.reset()
                             else:
                                 # Duplicate - mark as processed
                                 processed_indices.add(idx)
@@ -669,8 +741,8 @@ class GoogleMapsScraperPro:
                         failed_cards.add(idx)
                         continue
                     
-                    # Small pause between cards
-                    time.sleep(0.5)
+                    # Small pause between cards (already handled by rate limiter)
+                    pass
             
             pbar.close()
             
@@ -745,6 +817,12 @@ def main():
     parser.add_argument('--max', '-m', type=int, default=500, help='Max results')
     parser.add_argument('--headless', action='store_true', help='Run headless')
     
+    # Rate limiting options
+    parser.add_argument('--delay', type=float, default=2.0, 
+                       help='Minimum delay between requests (seconds)')
+    parser.add_argument('--no-jitter', action='store_true',
+                       help='Disable random jitter (not recommended)')
+    
     args = parser.parse_args()
     
     # Create directories
@@ -756,7 +834,11 @@ def main():
     config = {
         "advanced_settings": {
             "headless": args.headless,
-            "rate_limiting": {"smart_delay": {"min_delay": 1, "max_delay": 2}}
+            "rate_limiting": {
+                "min_delay": args.delay,
+                "max_delay": args.delay * 2.5,
+                "jitter": not args.no_jitter
+            }
         }
     }
     
@@ -771,11 +853,12 @@ def main():
     if args.manual:
         # Manual mode
         print(f"\n{Fore.MAGENTA}{'='*60}")
-        print(f"{Fore.MAGENTA} ❤ GOOGLE MAPS SCRAPER PRO 5.0 by ssecgroup_shiyanthan k")
+        print(f"{Fore.MAGENTA} ❤ GOOGLE MAPS SCRAPER PRO 5.0 by ssecgroup")
         print(f"{Fore.MAGENTA}{'='*60}")
         print(f"   Mode:          {Fore.CYAN}MANUAL")
         print(f"   Headless:      {Fore.CYAN}{args.headless}")
         print(f"   Max results:   {Fore.CYAN}{args.max}")
+        print(f"   Min delay:     {Fore.CYAN}{args.delay}s")
         print(f"   Log file:      {Fore.CYAN}output1/logs/")
         print(f"{Fore.MAGENTA}{'='*60}\n")
         
