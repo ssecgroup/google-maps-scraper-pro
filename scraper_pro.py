@@ -48,7 +48,7 @@ load_dotenv()
 init(autoreset=True)
 
 # ============================================================================
-# CHECKPOINT MANAGER
+# CHECKPOINT MANAGER ❤ https://github/ssecgroup
 # ============================================================================
 
 class CheckpointManager:
@@ -126,7 +126,7 @@ class CheckpointManager:
             
             self.last_checkpoint_count = count
             self.checkpoint_file = checkpoint_file
-            self.logger.info(f"{Fore.GREEN}  💾 Checkpoint saved: {os.path.basename(checkpoint_file)}")
+            self.logger.info(f"{Fore.GREEN}   Checkpoint saved: {os.path.basename(checkpoint_file)}")
             
         except Exception as e:
             self.logger.error(f"{Fore.RED}  ✗ Failed to save checkpoint: {e}")
@@ -137,7 +137,7 @@ class CheckpointManager:
             self.logger.warning("No checkpoint file to convert")
             return
         
-        self.logger.info(f"\n{Fore.CYAN}🔄 Converting to final formats...")
+        self.logger.info(f"\n{Fore.CYAN} Converting to final formats...")
         
         # Read all businesses from checkpoint
         businesses = []
@@ -236,7 +236,7 @@ class CheckpointManager:
     </style>
 </head>
 <body>
-    <h1>📊 Business Scraping Report</h1>
+    <h1> Business Scraping Report</h1>
     <p>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
     
     <div class="stats-grid">
@@ -254,7 +254,7 @@ class CheckpointManager:
         </div>
     </div>
     
-    <h2>📝 Business Details</h2>
+    <h2> Business Details</h2>
     <table>
         <tr>
             <th>#</th>
@@ -377,7 +377,7 @@ class GoogleMapsScraperPro:
             ]
         )
         self.logger = logging.getLogger(__name__)
-        self.logger.info(f"📝 Logging to: {log_file}")
+        self.logger.info(f" Logging to: {log_file}")
     
     def setup_signal_handlers(self):
         """Setup signal handlers for graceful Ctrl+C behavior"""
@@ -404,7 +404,7 @@ class GoogleMapsScraperPro:
                 
                 # Save final checkpoint
                 if self.checkpoint and self.businesses:
-                    print(f"\n{Fore.CYAN}💾 Saving final checkpoint before exit...")
+                    print(f"\n{Fore.CYAN} Saving final checkpoint before exit...")
                     self.checkpoint.save_checkpoint(self.businesses, len(self.businesses))
                     self.checkpoint.convert_to_final()
                 
@@ -451,7 +451,7 @@ class GoogleMapsScraperPro:
         Manual mode - user performs search, script scrapes results
         """
         print(f"\n{Fore.MAGENTA}{'='*60}")
-        print(f"{Fore.MAGENTA}🔍 MANUAL SEARCH MODE")
+        print(f"{Fore.MAGENTA} MANUAL SEARCH MODE")
         print(f"{Fore.MAGENTA}{'='*60}")
         print(f"{Fore.CYAN}1. Browser will open to Google Maps")
         print(f"{Fore.CYAN}2. Type your search (e.g., 'restaurants in Tiruppur')")
@@ -467,20 +467,20 @@ class GoogleMapsScraperPro:
             
             # Navigate to Google Maps
             browser.driver.get("https://www.google.com/maps")
-            self.logger.info("✅ Browser opened to Google Maps")
+            self.logger.info(" Browser opened to Google Maps")
             
             # Wait for user to perform search
-            input(f"{Fore.YELLOW}👉 Press Enter AFTER you've performed your search and results are loaded...")
+            input(f"{Fore.YELLOW} Press Enter AFTER you've performed your search and results are loaded...")
             
             # Give a moment for results to settle
             time.sleep(2)
             
             # Check for business cards
             cards = browser.get_business_cards()
-            self.logger.info(f"✅ Found {len(cards)} business cards")
+            self.logger.info(f" Found {len(cards)} business cards")
             
             if len(cards) == 0:
-                self.logger.error("❌ No business cards found! Make sure you're on a search results page.")
+                self.logger.error(" No business cards found! Make sure you're on a search results page.")
                 return
             
             # Let user decide how many to scrape
@@ -500,12 +500,12 @@ class GoogleMapsScraperPro:
             self.businesses = []
             
             print(f"\n{Fore.MAGENTA}{'='*60}")
-            print(f"{Fore.MAGENTA}🚀 STARTING SCRAPE")
+            print(f"{Fore.MAGENTA} STARTING SCRAPE")
             print(f"{Fore.MAGENTA}{'='*60}")
             
             # Create parser with driver
             parser = SmartParser(browser.driver)
-            self.logger.info("✅ SmartParser initialized with driver")
+            self.logger.info(" SmartParser initialized with driver")
             
             # Progress bar
             pbar = tqdm(total=max_results, desc="Scraping", unit="businesses")
@@ -644,7 +644,7 @@ class GoogleMapsScraperPro:
                                 if business.get('website'): icons.append("🌐")
                                 if business.get('address'): icons.append("📍")
                                 if business.get('rating'): icons.append("⭐")
-                                print(f"\n{Fore.GREEN}   ✅ #{len(self.businesses)}: {name_short} {' '.join(icons)}")
+                                print(f"\n{Fore.GREEN}    #{len(self.businesses)}: {name_short} {' '.join(icons)}")
                                 
                                 # Save checkpoint every 10 businesses
                                 if len(self.businesses) % 10 == 0:
@@ -652,7 +652,7 @@ class GoogleMapsScraperPro:
                                         self.businesses[-10:],
                                         len(self.businesses)
                                     )
-                                    print(f"{Fore.CYAN}📊 Progress: {len(self.businesses)} businesses scraped")
+                                    print(f"{Fore.CYAN} Progress: {len(self.businesses)} businesses scraped")
                             else:
                                 # Duplicate - mark as processed
                                 processed_indices.add(idx)
@@ -700,7 +700,7 @@ class GoogleMapsScraperPro:
         seconds = int(elapsed % 60)
         
         print(f"\n{Fore.GREEN}{'='*60}")
-        print(f"{Fore.GREEN}✅ MANUAL SCRAPE COMPLETE!")
+        print(f"{Fore.GREEN} MANUAL SCRAPE COMPLETE!")
         print(f"{Fore.GREEN}{'='*60}")
         print(f"   Businesses scraped: {len(self.businesses)}")
         print(f"   Master file: {self.checkpoint.base_name}")
@@ -712,7 +712,7 @@ class GoogleMapsScraperPro:
         
         # Print summary
         print(f"\n{Fore.CYAN}{'='*60}")
-        print(f"{Fore.CYAN}📊 SCRAPING SUMMARY")
+        print(f"{Fore.CYAN} SCRAPING SUMMARY")
         print(f"{Fore.CYAN}{'='*60}")
         print(f"   Time elapsed:     {hours:02d}:{minutes:02d}:{seconds:02d}")
         print(f"   Businesses found: {len(self.businesses)}")
@@ -722,7 +722,7 @@ class GoogleMapsScraperPro:
     def run(self):
         """Main entry point"""
         print(f"\n{Fore.MAGENTA}{'='*60}")
-        print(f"{Fore.MAGENTA}🚀 GOOGLE MAPS SCRAPER PRO 5.0")
+        print(f"{Fore.MAGENTA} GOOGLE MAPS SCRAPER PRO 5.0")
         print(f"{Fore.MAGENTA}{'='*60}\n")
 
 
@@ -771,7 +771,7 @@ def main():
     if args.manual:
         # Manual mode
         print(f"\n{Fore.MAGENTA}{'='*60}")
-        print(f"{Fore.MAGENTA}🚀 GOOGLE MAPS SCRAPER PRO 5.0")
+        print(f"{Fore.MAGENTA} ❤ GOOGLE MAPS SCRAPER PRO 5.0 by ssecgroup_shiyanthan k")
         print(f"{Fore.MAGENTA}{'='*60}")
         print(f"   Mode:          {Fore.CYAN}MANUAL")
         print(f"   Headless:      {Fore.CYAN}{args.headless}")
