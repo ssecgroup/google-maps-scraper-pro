@@ -1,0 +1,182 @@
+{
+    "project": {
+        "name": "Google Maps Business Scraper Pro",
+        "version": "2.0.0",
+        "author": "sssecgroup"
+    },
+    "searches": [
+        {
+            "id": "search_001",
+            "query": "restaurants",
+            "location": "Tiruppur,Tamil Nadu,India",
+            "radius_km": 5,
+            "max_results": 200,
+            "min_rating": 4.0,
+            "min_reviews": 10,
+            "categories": [
+                "Italian",
+                "French",
+                "Japanese"
+            ],
+            "exclude_keywords": [
+                "closed",
+                "permanently closed"
+            ]
+        },
+        {
+            "id": "search_002",
+            "query": "dentists",
+            "location": "Tiruppur, Tamil Nadu",
+            "radius_km": 10,
+            "max_results": 150,
+            "accepts_insurance": true,
+            "emergency_services": true
+        }
+    ],
+    "advanced_settings": {
+        "scraping_mode": "stealth",
+        "headless": false,
+        "multi_threading": {
+            "enabled": true,
+            "max_workers": 3,
+            "browsers_per_worker": 1
+        },
+        "proxy_rotation": {
+            "enabled": true,
+            "proxy_file": "proxies.txt",
+            "rotation_interval": 300,
+            "max_failures_per_proxy": 3
+        },
+        "user_agent_rotation": {
+            "enabled": true,
+            "user_agents_file": "user_agents.txt",
+            "rotate_every_request": false,
+            "rotate_every_session": true
+        },
+        "rate_limiting": {
+            "requests_per_minute": 30,
+            "requests_per_ip": 100,
+            "cooldown_period": 60,
+            "smart_delay": {
+                "min_delay": 1,
+                "max_delay": 5,
+                "jitter": true
+            }
+        },
+        "retry_strategy": {
+            "max_retries": 5,
+            "backoff_factor": 2,
+            "retry_on_timeout": true,
+            "retry_on_captcha": true
+        }
+    },
+    "data_enrichment": {
+        "extract_emails": {
+            "enabled": true,
+            "methods": [
+                "website_scrape",
+                "whois_lookup",
+                "social_media"
+            ],
+            "max_pages_per_site": 3,
+            "timeout_seconds": 10
+        },
+        "social_media": {
+            "facebook": true,
+            "instagram": true,
+            "twitter": true,
+            "linkedin": true,
+            "yelp": true
+        },
+        "business_verification": {
+            "check_active": true,
+            "verify_phone": true,
+            "check_google_my_business": true
+        },
+        "additional_fields": {
+            "opening_hours": true,
+            "popular_times": true,
+            "photos_count": true,
+            "recent_reviews": true,
+            "price_range": true,
+            "payment_methods": true,
+            "wheelchair_accessible": true,
+            "parking": true,
+            "delivery": true,
+            "takeout": true
+        }
+    },
+    "export_settings": {
+        "formats": [
+            "csv",
+            "excel",
+            "json",
+            "sqlite",
+            "html_report"
+        ],
+        "csv": {
+            "delimiter": ",",
+            "encoding": "utf-8-sig",
+            "include_bom": true
+        },
+        "excel": {
+            "format_cells": true,
+            "add_filters": true,
+            "color_code": true,
+            "add_summary_sheet": true
+        },
+        "database": {
+            "type": "sqlite",
+            "connection_string": "sqlite:///business_data.db",
+            "table_name": "businesses",
+            "backup_before_write": true
+        },
+        "reports": {
+            "html_template": "templates/report.html",
+            "pdf": {
+                "enabled": false,
+                "page_size": "A4"
+            },
+            "email_report": {
+                "enabled": false,
+                "recipients": [
+                    "admin@example.com"
+                ],
+                "schedule": "daily"
+            }
+        }
+    },
+    "monitoring": {
+        "log_level": "INFO",
+        "log_file": "scraper_pro.log",
+        "log_rotation": {
+            "max_size_mb": 100,
+            "backup_count": 5
+        },
+        "metrics": {
+            "enabled": true,
+            "prometheus_port": 8000,
+            "grafana_dashboard": true
+        },
+        "alerts": {
+            "email": {
+                "enabled": false,
+                "smtp_server": "smtp.gmail.com",
+                "port": 587,
+                "username": "{{EMAIL_USER}}",
+                "password": "{{EMAIL_PASS}}"
+            },
+            "slack": {
+                "enabled": false,
+                "webhook_url": "{{SLACK_WEBHOOK}}"
+            }
+        }
+    },
+    "compliance": {
+        "respect_robots_txt": true,
+        "delay_between_requests": 2,
+        "max_concurrent_requests": 5,
+        "terms_accepted": false,
+        "data_retention_days": 30
+    }
+}

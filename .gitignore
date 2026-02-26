@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.dll
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+myenv/
+venv311/
+.virtualenv/
+
+# Output Directories
+output/
+output1/
+*.log
+*.db
+*.jsonl
+checkpoints/
+final/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.key
+*.pem
+*.crt
+
+# Temporary files
+temp_*
+tmp_*
+*.tmp
+*.bak
+*.cache
+
+# Project specific
+chromedriver-linux64.zip
+chromedriver-linux64.zip.1
+temp_config.json
+temp_config_pro.json

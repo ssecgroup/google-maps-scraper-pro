@@ -1,0 +1,21 @@
+# Proxy List Format:
+# http://user:pass@host:port
+# http://host:port
+# socks5://host:port
+# 
+# Examples:
+# http://proxy1.example.com:8080
+# http://user:password@proxy2.example.com:3128
+# socks5://192.168.1.100:1080
+# 
+# You can get free proxies from:
+# - https://free-proxy-list.net/
+# - https://www.sslproxies.org/
+# - https://www.us-proxy.org/
+#
+# Add your proxies below (one per line):
+
+# Free proxy examples (replace with working ones):
+# http://45.143.223.12:3128
+# http://103.149.162.195:80
+# socks5://51.158.68.26:1080

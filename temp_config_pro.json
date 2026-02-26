@@ -1,0 +1,62 @@
+{
+    "searches": [
+        {
+            "id": "cli_search",
+            "query": "restaurants",
+            "location": "Tiruppur, Tamil Nadu",
+            "max_results": 5
+        }
+    ],
+    "advanced_settings": {
+        "headless": false,
+        "scraping_mode": "stealth",
+        "multi_threading": {
+            "enabled": false
+        },
+        "proxy_rotation": {
+            "enabled": false
+        },
+        "user_agent_rotation": {
+            "enabled": true
+        },
+        "rate_limiting": {
+            "requests_per_minute": 30,
+            "smart_delay": {
+                "min_delay": 1,
+                "max_delay": 3,
+                "jitter": true
+            }
+        },
+        "retry_strategy": {
+            "max_retries": 3,
+            "backoff_factor": 2,
+            "retry_on_timeout": true,
+            "retry_on_captcha": true
+        }
+    },
+    "data_enrichment": {
+        "enabled": true,
+        "extract_emails": {
+            "enabled": true,
+            "max_pages_per_site": 2
+        },
+        "social_media": {
+            "enabled": true
+        }
+    },
+    "export_settings": {
+        "formats": [
+            "csv",
+            "json",
+            "html_report"
+        ],
+        "csv": {
+            "delimiter": ",",
+            "encoding": "utf-8-sig"
+        }
+    },
+    "monitoring": {
+        "log_level": "INFO",
+        "log_file": "scraper_pro.log"
+    }
+}
