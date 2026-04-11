@@ -51,7 +51,7 @@ This system is engineered for **scale**.
 ❌ RAM crashes after 10k records
 ❌ Duplicate data flooding outputs
 ❌ Lost progress on interruption
-❌ Non-resumable jobs
+❌ Non-resumable job
 ❌ Post-processing bottlenecks
 ❌ Memory leaks after hours of runtime
 ```
